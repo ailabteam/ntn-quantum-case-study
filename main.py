@@ -18,7 +18,7 @@ SNR_OUTAGE_THRESHOLD_DB = 5.0
 
 # --- Cấu hình QIO ---
 HORIZON_SECONDS = 10
-LAMBDA_HO = 20.0
+LAMBDA_HO = 30.0
 PENALTY_P = 100.0
 
 def analyze_results(df, strategy_name):
