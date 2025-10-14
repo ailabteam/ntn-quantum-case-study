@@ -90,33 +90,6 @@ Solving with QAOA... (This may take a while)
 (Results and metrics for the QAOA strategy will be displayed here)
 ```
 
-## 🔬 Methodology Overview
-
-1.  **Environment Simulation:** An NTN environment is initialized, loading a constellation of satellites (`8470` in this example).
-2.  **Problem Formulation (QUBO):** The satellite selection task is mathematically formulated as a QUBO problem. Each satellite is represented by a binary variable, $x_i \in \{0, 1\}$, where $x_i = 1$ if the satellite is selected and $0$ otherwise. The objective is to minimize a cost function of the form:
-    $$ \min_{x} \sum_{i} Q_{i,i}x_i + \sum_{i<j} Q_{i,j}x_i x_j $$
-    The matrix $Q$ encodes both the benefits of selecting individual satellites and the costs/benefits of selecting pairs of satellites.
-3.  **Solvers:**
-    *   The **Greedy solver** iteratively builds a solution by selecting the best possible satellite at each step until a constraint is met.
-    *   The **QAOA solver** maps the QUBO instance to an Ising Hamiltonian and uses the QAOA circuit to find the ground state, which corresponds to the optimal solution.
-
-## 📜 Citation
-
-If you find this code useful in your research, please cite our survey paper:
-
-```bibtex
-@article{PHDo_2025_ntn_survey,
-  author    = {[Your Names]},
-  title     = {Synergies of AI and Quantum Technologies in Next-Generation Non-Terrestrial Networks: A Comprehensive Survey},
-  journal   = {[Journal/Conference Name]},
-  year      = {2024},
-  volume    = {[Volume]},
-  pages     = {[Pages]},
-  publisher = {[Publisher]}
-}
-```
-*(Please update the BibTeX entry with the final publication details.)*
-
 ## 📄 License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
