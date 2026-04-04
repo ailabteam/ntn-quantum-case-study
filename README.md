@@ -1,114 +1,116 @@
-# Quantum-Assisted Handover Optimization in LEO Satellite Networks
+# Scalable Quantum-Inspired Handover Optimization in Multi-Layered NTNs
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-This repository contains the source code for the proof-of-concept case study presented in the paper:
+This repository contains the source code and experimental framework for the case study presented in the survey paper:
 
 > **"Synergies of AI and Quantum Technologies in Next-Generation Non-Terrestrial Networks: A Comprehensive Survey"**
 >
-> *Author: Phuc Hao Do*
->
-> *(Link to preprint will be added upon publication)*
+> **Author:** Phuc Hao Do
+> 
+> **Journal:** Journal of Communications and Information Networks (JCIN)
+> **Status:** Revised (April 2026)
 
-## Overview
+---
 
-This project provides a simulation framework to compare different handover strategies for a mobile user equipment (UE) served by a Low Earth Orbit (LEO) satellite constellation. The primary goal is to demonstrate the potential of quantum-assisted optimization algorithms (specifically QAOA) in finding a superior trade-off between maximizing connection quality (SNR) and minimizing service disruptions (handovers) compared to classical and AI-based approaches.
+## 🌟 Overview
 
-The simulation compares three main strategies:
-1.  **Greedy Strategy:** A classical baseline that always connects to the satellite with the highest instantaneous Signal-to-Noise Ratio (SNR).
-2.  **Random Strategy:** A baseline that randomly selects a visible satellite at each time step.
-3.  **Quantum-Assisted (QAOA) Strategy:** Formulates the handover problem over a time horizon as a Quadratic Unconstrained Binary Optimization (QUBO) problem and solves it using the Quantum Approximate Optimization Algorithm (QAOA) simulated with Qiskit.
+Handover management is a critical challenge in Non-Terrestrial Networks (NTNs) due to high orbital velocities and dynamic channel conditions. This project demonstrates a **Quantum-Inspired Optimization (QIO)** approach using **Quadratic Unconstrained Binary Optimization (QUBO)** to find an optimal balance between signal quality (SNR) and connection stability.
 
-## Project Structure
+### Key Revision Enhancements (v2.0)
+The latest version (located in the `/revised` directory) includes a significantly expanded simulation suite to address scalability and realism:
+- **Large-Scale Multi-UE Scenario:** Evaluated over **50 heterogeneous UEs** with diverse mobility patterns (Static IoT, 80 km/h Vehicular, and 900 km/h Airborne).
+- **Multi-Layered NTN:** Integration of mixed-orbit constellations consisting of **Starlink (LEO)** and **O3b (MEO)** satellites.
+- **Extended Duration:** Simulation window increased to **600 seconds** to capture long-term orbital dynamics.
+- **Performance:** Achieved an approximately **84% reduction in handovers** compared to the classical Greedy baseline while maintaining a 0% outage rate.
+- **Sensitivity Analysis:** Automated evaluation of the handover penalty parameter ($\lambda_{HO}$).
 
-```
+---
+
+## 📂 Project Structure
+
+```text
 .
-├── ntn-quantum-case-study/
-│   ├── main.py               # Main script to run simulations and generate results
-│   ├── ntn_environment.py    # Class for simulating the NTN environment (satellites, UE, channel)
-│   ├── handover_strategies.py# Implementation of Greedy, Random, and QAOA strategies
-│   ├── starlink.tle          # TLE data file for the satellite constellation
-│   ├── requirements.txt      # List of required Python packages
-│   └── README.md             # This file
+├── revised/                  # PRIMARY: Updated code for the Revised Manuscript
+│   ├── main.py               # Main script with Multi-processing support
+│   ├── ntn_environment.py    # Mixed LEO/MEO Environment & Radar-sweep filtering
+│   ├── handover_strategies.py# QUBO formulation & D-Wave Neal Sampler logic
+│   └── sensitivity_analysis.png # Results of the parameter sweep
+├── starlink.tle              # LEO orbit data
+├── o3b.tle                   # MEO orbit data
+├── requirements.txt          # Python dependencies
+└── README.md                 # This file
 ```
 
-## Getting Started
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Python 3.9+
-- Conda package manager
+- Python 3.10 or higher
+- High-performance CPU (The simulation uses `concurrent.futures` for parallel processing across 50 UEs)
 
 ### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/ailabteam/ntn-quantum-case-study.git
+   cd ntn-quantum-case-study
+   ```
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/ailabteam/ntn-quantum-case-study.git
-    cd ntn-quantum-case-study
-    ```
+2. **Set up the environment:**
+   ```bash
+   conda create -n ntn_quantum python=3.10 -y
+   conda activate ntn_quantum
+   pip install numpy pandas matplotlib skyfield pyqubo dwave-neal
+   ```
 
-2.  **Create and activate the Conda environment:**
-    ```bash
-    conda create -n ntn_q_env python=3.10 -y
-    conda activate ntn_q_env
-    ```
+3. **Download Required Ephemeris:**
+   The code will automatically download `de421.bsp` and TLE files on the first run.
 
-3.  **Install the required packages:**
-    We recommend creating a `requirements.txt` file for easy installation.
-    ```bash
-    # (Optional) Create requirements.txt
-    # pip freeze > requirements.txt 
-    
-    # Install from requirements (or install manually as below)
-    # pip install -r requirements.txt
+---
 
-    # Manual installation
-    conda install -c conda-forge numpy pandas matplotlib skyfield -y
-    pip install qiskit qiskit-optimization qiskit-aer qiskit_algorithms
-    ```
+## 📊 Running the Simulation
 
-4.  **Download TLE Data:**
-    Download the latest TLE data for the Starlink constellation from [Celestrak](https://celestrak.org/NORAD/elements/gp.php?GROUP=starlink&FORMAT=tle) and save it as `starlink.tle` in the root directory of the project.
-
-## How to Run the Simulation
-
-To run the full simulation comparing the different strategies, execute the main script:
+To reproduce the results shown in the revised paper:
 
 ```bash
+cd revised
 python main.py
 ```
 
-The script will perform the following steps:
-1.  Initialize the NTN environment.
-2.  Collect satellite visibility and SNR data over the configured simulation duration.
-3.  Run the **Greedy** strategy.
-4.  Run the **Random** strategy (once implemented).
-5.  Build and solve the QUBO problem using the **QAOA** strategy. **Note:** This step is computationally intensive and may take a significant amount of time.
-6.  Print a final summary table comparing the performance metrics.
-7.  Generate a comparative plot (`comparison_plot.png`) showing the SNR evolution and handover events for each strategy.
+### What happens during execution?
+1. **Phase 1 (Environmental Pre-computation):** The system performs a "Radar Sweep" to filter visible satellites from a pool of >10,000 objects and calculates the SNR for all 50 UEs across 600 time steps.
+2. **Phase 2 (Parallel Optimization):** The simulator runs the Greedy and QIO strategies. The QIO strategy utilizes the **Simulated Annealing** sampler to solve the QUBO problem for each rolling horizon window.
+3. **Phase 3 (Sensitivity Analysis):** The script executes a parameter sweep for $\lambda_{HO} \in \{5, 10, 20, 30, 50\}$ and generates a trade-off plot.
 
-### Configuration
+---
 
-Key simulation parameters can be adjusted at the top of the `main.py` file, including:
-- `SIM_DURATION_SECONDS`: Total simulation time.
-- `UE_VELOCITY_KMH`: Speed of the mobile user.
-- `LAMBDA_HO`: The handover penalty weight in the QUBO formulation.
-- `PENALTY_P`: The constraint penalty weight in the QUBO formulation.
+## 📈 Results
 
-## Citation
+| Strategy | Avg. SNR (dB) | Avg. Handovers / UE | Outage (%) |
+| :--- | :---: | :---: | :---: |
+| Greedy | 34.34 | 256.68 | 0.0% |
+| **Quantum-Inspired (QIO)** | **33.84** | **42.15** | **0.0%** |
 
-If you find this work useful in your research, please consider citing our paper:
+The QIO strategy provides a dramatic improvement in network stability, making it highly suitable for 6G NTN environments where handover signaling overhead must be minimized.
+
+---
+
+## 📝 Citation
+
+If you use this code or the survey in your research, please cite:
 
 ```bibtex
 @article{do2025synergies,
-  title   = {Synergies of AI and Quantum Technologies in Next-Generation Non-Terrestrial Networks: A Comprehensive Survey},
-  author  = {Do, Phuc Hao},
-  journal = {Journal of Communications and Information Networks},
-  year    = {2025},
-  % (Volume, pages, etc. to be added upon publication)
+  title={Synergies of AI and Quantum Technologies in Next-Generation Non-Terrestrial Networks: A Comprehensive Survey},
+  author={Do, Phuc Hao},
+  journal={Journal of Communications and Information Networks},
+  year={2025},
+  note={Manuscript under revision}
 }
 ```
 
-## License
+## 📄 License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
